@@ -27,7 +27,39 @@ env:
   VERSION: ${{ github.event.inputs.version }}
 
 jobs:
+  check-cd-uat:
+    runs-on: ubuntu-latest
+    outputs:
+      cd_uat_status: ${{ steps.get_cd_uat.outputs.conclusion }}
+    steps:
+      - name: Verificar ultimo resultado del pipeline CD_UAT
+        id: get_cd_uat
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          conclusion=$(gh run list \
+            --repo ${{ github.repository }} \
+            --workflow cd_uat.yml \
+            --branch main \
+            --limit 1 \
+            --json conclusion \
+            --jq '.[0].conclusion')
+          echo "CD_UAT conclusion: $conclusion"
+          echo "conclusion=$conclusion" >> $GITHUB_OUTPUT
+
+  block-on-uat-failure:
+    needs: check-cd-uat
+    if: needs.check-cd-uat.outputs.cd_uat_status != 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Error - CD_UAT no finalizo correctamente
+        run: |
+          echo "::error::El pipeline CD_UAT termino con estado '${{ needs.check-cd-uat.outputs.cd_uat_status }}'. El deploy a PRD fue bloqueado."
+          exit 1
+
   deploy-prd:
+    needs: check-cd-uat
+    if: needs.check-cd-uat.outputs.cd_uat_status == 'success'
     runs-on: ubuntu-latest
 
     steps:

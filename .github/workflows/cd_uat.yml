@@ -64,3 +64,6 @@ jobs:
         run: |
           echo "Desplegando version ${{ env.VERSION }} en UAT"
           echo "Parametro fruta: ${{ github.event.inputs.fruta }}"
+
+      - name: Simular error
+        run: exit 1
