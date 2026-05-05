@@ -27,7 +27,29 @@ env:
   VERSION: ${{ github.event.inputs.version }}
 
 jobs:
+  check-ci:
+    runs-on: ubuntu-latest
+    outputs:
+      ci_status: ${{ steps.get_ci.outputs.conclusion }}
+    steps:
+      - name: Verificar ultimo resultado del pipeline CI
+        id: get_ci
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          conclusion=$(gh run list \
+            --repo ${{ github.repository }} \
+            --workflow ci.yml \
+            --branch main \
+            --limit 1 \
+            --json conclusion \
+            --jq '.[0].conclusion')
+          echo "CI conclusion: $conclusion"
+          echo "conclusion=$conclusion" >> $GITHUB_OUTPUT
+
   deploy-dev:
+    needs: check-ci
+    if: needs.check-ci.outputs.ci_status == 'success'
     runs-on: ubuntu-latest
 
     steps:
