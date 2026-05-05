@@ -11,17 +11,26 @@ on:
         required: true
         type: string
         default: "1.0.0"
-      fruta:
-        description: "Selecciona una fruta"
-        required: true
-        type: choice
-        options:
-          - manzana
-          - naranja
-          - banana
-          - uva
-          - fresa
-        default: manzana
+      fruta_manzana:
+        description: "Manzana"
+        type: boolean
+        default: false
+      fruta_naranja:
+        description: "Naranja"
+        type: boolean
+        default: false
+      fruta_banana:
+        description: "Banana"
+        type: boolean
+        default: false
+      fruta_uva:
+        description: "Uva"
+        type: boolean
+        default: false
+      fruta_fresa:
+        description: "Fresa"
+        type: boolean
+        default: false
 
 env:
   VERSION: ${{ github.event.inputs.version }}
@@ -65,12 +74,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Mostrar version y fruta seleccionada
+      - name: Mostrar version y frutas seleccionadas
         run: |
           echo "Version: ${{ env.VERSION }}"
-          echo "Fruta seleccionada: ${{ github.event.inputs.fruta }}"
+          echo "Frutas seleccionadas:"
+          ${{ github.event.inputs.fruta_manzana == 'true' && 'echo "  - Manzana"' || 'true' }}
+          ${{ github.event.inputs.fruta_naranja == 'true' && 'echo "  - Naranja"' || 'true' }}
+          ${{ github.event.inputs.fruta_banana  == 'true' && 'echo "  - Banana"'  || 'true' }}
+          ${{ github.event.inputs.fruta_uva     == 'true' && 'echo "  - Uva"'     || 'true' }}
+          ${{ github.event.inputs.fruta_fresa   == 'true' && 'echo "  - Fresa"'   || 'true' }}
 
       - name: Deploy a PRD
         run: |
           echo "Desplegando version ${{ env.VERSION }} en PRD"
-          echo "Parametro fruta: ${{ github.event.inputs.fruta }}"
