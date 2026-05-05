@@ -1,7 +1,7 @@
-# Continuous Deployment - Dev
+# Continuous Deployment - PRD
 
-name: CD_UAT
-run-name: "CD-UAT-${{ github.event.inputs.version }}"
+name: CD_PRD
+run-name: "CD-PRD-${{ github.event.inputs.version }}"
 
 on:
   workflow_dispatch:
@@ -27,7 +27,7 @@ env:
   VERSION: ${{ github.event.inputs.version }}
 
 jobs:
-  deploy-uat:
+  deploy-prd:
     runs-on: ubuntu-latest
 
     steps:
@@ -38,7 +38,7 @@ jobs:
           echo "Version: ${{ env.VERSION }}"
           echo "Fruta seleccionada: ${{ github.event.inputs.fruta }}"
 
-      - name: Deploy a UAT
+      - name: Deploy a PRD
         run: |
-          echo "Desplegando version ${{ env.VERSION }} en UAT"
+          echo "Desplegando version ${{ env.VERSION }} en PRD"
           echo "Parametro fruta: ${{ github.event.inputs.fruta }}"
