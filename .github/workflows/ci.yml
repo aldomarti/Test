@@ -7,22 +7,13 @@ run-name: "CI-1.0.${{ github.run_number }}"
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: 
+      - main
+#  pull_request:
+#    branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-    inputs:
-      proyectos:
-        description: 'Selecciona el proyecto a compilar (Build)'
-        required: true
-        default: "person-connect"
-        type: choice
-        options:
-          - "person-connect"
-          - "person-login"
-          - "person-process"
 
 env:
     VERSION: 1.0.${{ github.run_number }}
