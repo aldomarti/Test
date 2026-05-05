@@ -21,6 +21,7 @@ on:
           - banana
           - uva
           - fresa
+          - pera
         default: manzana
 
 env:
