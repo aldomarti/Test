@@ -47,6 +47,16 @@ jobs:
           echo "CD_DEV conclusion: $conclusion"
           echo "conclusion=$conclusion" >> $GITHUB_OUTPUT
 
+  block-on-cd-dev-failure:
+    needs: check-cd-dev
+    if: needs.check-cd-dev.outputs.cd_dev_status != 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Error - CD_DEV no finalizo correctamente
+        run: |
+          echo "::error::El pipeline CD_DEV termino con estado '${{ needs.check-cd-dev.outputs.cd_dev_status }}'. El deploy a UAT fue bloqueado."
+          exit 1
+
   deploy-uat:
     needs: check-cd-dev
     if: needs.check-cd-dev.outputs.cd_dev_status == 'success'
@@ -65,5 +75,5 @@ jobs:
           echo "Desplegando version ${{ env.VERSION }} en UAT"
           echo "Parametro fruta: ${{ github.event.inputs.fruta }}"
 
-      - name: Simular error
-        run: exit 1
+      # - name: Simular error
+      #   run: exit 1
