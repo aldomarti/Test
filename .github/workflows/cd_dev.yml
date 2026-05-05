@@ -75,5 +75,5 @@ jobs:
           echo "Desplegando version ${{ env.VERSION }} en DEV"
           echo "Parametro fruta: ${{ github.event.inputs.fruta }}"
 
-      - name: Simular error
-        run: exit 1
+    #   - name: Simular error
+    #     run: exit 1
