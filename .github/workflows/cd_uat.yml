@@ -27,7 +27,29 @@ env:
   VERSION: ${{ github.event.inputs.version }}
 
 jobs:
+  check-cd-dev:
+    runs-on: ubuntu-latest
+    outputs:
+      cd_dev_status: ${{ steps.get_cd_dev.outputs.conclusion }}
+    steps:
+      - name: Verificar ultimo resultado del pipeline CD_DEV
+        id: get_cd_dev
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          conclusion=$(gh run list \
+            --repo ${{ github.repository }} \
+            --workflow cd_dev.yml \
+            --branch main \
+            --limit 1 \
+            --json conclusion \
+            --jq '.[0].conclusion')
+          echo "CD_DEV conclusion: $conclusion"
+          echo "conclusion=$conclusion" >> $GITHUB_OUTPUT
+
   deploy-uat:
+    needs: check-cd-dev
+    if: needs.check-cd-dev.outputs.cd_dev_status == 'success'
     runs-on: ubuntu-latest
 
     steps:
