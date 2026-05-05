@@ -1,0 +1,44 @@
+# Continuous Deployment - Dev
+
+name: CD_DEV
+run-name: "CD-DEV-${{ github.event.inputs.version }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Numero de version (ej: 1.0.0)"
+        required: true
+        type: string
+        default: "1.0.0"
+      fruta:
+        description: "Selecciona una fruta"
+        required: true
+        type: choice
+        options:
+          - manzana
+          - naranja
+          - banana
+          - uva
+          - fresa
+        default: manzana
+
+env:
+  VERSION: ${{ github.event.inputs.version }}
+
+jobs:
+  deploy-dev:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Mostrar version y fruta seleccionada
+        run: |
+          echo "Version: ${{ env.VERSION }}"
+          echo "Fruta seleccionada: ${{ github.event.inputs.fruta }}"
+
+      - name: Deploy a DEV
+        run: |
+          echo "Desplegando version ${{ env.VERSION }} en DEV"
+          echo "Parametro fruta: ${{ github.event.inputs.fruta }}"
