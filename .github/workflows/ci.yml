@@ -132,7 +132,7 @@ jobs:
       - name: Listar artefactos extraidos
         run: |
           echo "=== proyecto1 ==="
-          ls -la extracted/proyecto1/
+          ls -la
           echo "=== proyecto2 ==="
           ls -la extracted/proyecto2/
           docker images
