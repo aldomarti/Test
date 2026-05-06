@@ -11,26 +11,17 @@ on:
         required: true
         type: string
         default: "1.0.0"
-      fruta_manzana:
-        description: "Manzana"
-        type: boolean
-        default: false
-      fruta_naranja:
-        description: "Naranja"
-        type: boolean
-        default: false
-      fruta_banana:
-        description: "Banana"
-        type: boolean
-        default: false
-      fruta_uva:
-        description: "Uva"
-        type: boolean
-        default: false
-      fruta_fresa:
-        description: "Fresa"
-        type: boolean
-        default: false
+      frutas:
+        description: "Seleccionar fruta"
+        type: choice
+        default: "Ninguna"
+        options:
+          - Ninguna
+          - Manzana
+          - Naranja
+          - Banana
+          - Uva
+          - Fresa
 
 env:
   VERSION: ${{ github.event.inputs.version }}
@@ -77,12 +68,7 @@ jobs:
       - name: Mostrar version y frutas seleccionadas
         run: |
           echo "Version: ${{ env.VERSION }}"
-          echo "Frutas seleccionadas:"
-          ${{ github.event.inputs.fruta_manzana == 'true' && 'echo "  - Manzana"' || 'true' }}
-          ${{ github.event.inputs.fruta_naranja == 'true' && 'echo "  - Naranja"' || 'true' }}
-          ${{ github.event.inputs.fruta_banana  == 'true' && 'echo "  - Banana"'  || 'true' }}
-          ${{ github.event.inputs.fruta_uva     == 'true' && 'echo "  - Uva"'     || 'true' }}
-          ${{ github.event.inputs.fruta_fresa   == 'true' && 'echo "  - Fresa"'   || 'true' }}
+          echo "Fruta seleccionada: ${{ github.event.inputs.frutas }}"
 
       - name: Deploy a UAT
         run: |
