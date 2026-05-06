@@ -110,13 +110,28 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: artifact-proyecto1
+          path: artifacts/proyecto1
 
       - name: Descargar artifact proyecto2
         uses: actions/download-artifact@v4
         with:
           name: artifact-proyecto2
+          path: artifacts/proyecto2
 
-      - name: Listar archivos descargados
+      - name: Descomprimir artifact proyecto1
         run: |
-          echo "Archivos en el directorio actual:"
-          ls -la
+          mkdir -p extracted/proyecto1
+          unzip artifacts/proyecto1/*.zip -d extracted/proyecto1/
+
+      - name: Descomprimir artifact proyecto2
+        run: |
+          mkdir -p extracted/proyecto2
+          tar -xf artifacts/proyecto2/*.tar -C extracted/proyecto2/
+
+      - name: Listar artefactos extraidos
+        run: |
+          echo "=== proyecto1 ==="
+          ls -la extracted/proyecto1/
+          echo "=== proyecto2 ==="
+          ls -la extracted/proyecto2/
+          docker images
