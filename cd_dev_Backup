@@ -11,10 +11,30 @@ on:
         required: true
         type: string
         default: "1.0.0"
-      frutas:
-        description: "Frutas a desplegar (separadas por coma). Opciones: Manzana, Naranja, Banana, Uva, Fresa, Pera"
-        type: string
-        default: ""
+      fruta_manzana:
+        description: "Manzana"
+        type: boolean
+        default: false
+      fruta_naranja:
+        description: "Naranja"
+        type: boolean
+        default: false
+      fruta_banana:
+        description: "Banana"
+        type: boolean
+        default: false
+      fruta_uva:
+        description: "Uva"
+        type: boolean
+        default: false
+      fruta_fresa:
+        description: "Fresa"
+        type: boolean
+        default: false
+      fruta_pera:
+        description: "Pera"
+        type: boolean
+        default: false
 
 env:
   VERSION: ${{ github.event.inputs.version }}
@@ -59,20 +79,15 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Mostrar version y frutas seleccionadas
-        env:
-          FRUTAS_INPUT: ${{ github.event.inputs.frutas }}
         run: |
           echo "Version: ${{ env.VERSION }}"
           echo "Frutas seleccionadas:"
-          if [ -z "$FRUTAS_INPUT" ]; then
-            echo "  (ninguna)"
-          else
-            IFS=',' read -ra FRUTAS <<< "$FRUTAS_INPUT"
-            for fruta in "${FRUTAS[@]}"; do
-              fruta=$(echo "$fruta" | xargs)
-              echo "  - $fruta"
-            done
-          fi
+          ${{ github.event.inputs.fruta_manzana == 'true' && 'echo "  - Manzana"' || 'true' }}
+          ${{ github.event.inputs.fruta_naranja == 'true' && 'echo "  - Naranja"' || 'true' }}
+          ${{ github.event.inputs.fruta_banana  == 'true' && 'echo "  - Banana"'  || 'true' }}
+          ${{ github.event.inputs.fruta_uva     == 'true' && 'echo "  - Uva"'     || 'true' }}
+          ${{ github.event.inputs.fruta_fresa   == 'true' && 'echo "  - Fresa"'   || 'true' }}
+          ${{ github.event.inputs.fruta_pera    == 'true' && 'echo "  - Pera"'    || 'true' }}
 
       - name: Deploy a DEV
         run: |
