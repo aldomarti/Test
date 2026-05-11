@@ -73,12 +73,12 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           path: _config
 
-      # Parse dso/uat/default.yml and export all key-value pairs as environment variables
-      - name: Load variables from dso/uat/default.yml
+      # Parse dso/prd/default.yml and export all key-value pairs as environment variables
+      - name: Load variables from dso/prd/default.yml
         run: |
           python3 - <<'EOF'
           import yaml, os
-          with open('_config/dso/uat/default.yml', 'r') as f:
+          with open('_config/dso/prd/default.yml', 'r') as f:
               data = yaml.safe_load(f)
           with open(os.environ['GITHUB_ENV'], 'a') as env_file:
               for key, value in data.items():
@@ -90,9 +90,9 @@ jobs:
           echo "Version: ${{ env.VERSION }}"
           echo "Fruta seleccionada: ${{ github.event.inputs.frutas }}"
 
-      - name: Deploy a UAT
+      - name: Deploy a PRD
         run: |
-          echo "Desplegando version ${{ env.VERSION }} en UAT"
+          echo "Desplegando version ${{ env.VERSION }} en PRD"
           echo ${{ env.AWS_REGION }}
           echo ${{ env.AWS_USER_UPLOAD }}
           echo ${{ env.AWS_USER_DOWNLOAD }}
