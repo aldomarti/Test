@@ -30,6 +30,26 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
+      # Checkout the config repository to read shared variables
+      - name: Checkout config repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/config
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: _config
+
+      # Parse dso/build/default.yml and export all key-value pairs as environment variables
+      - name: Load variables from dso/build/default.yml
+        run: |
+          python3 - <<'EOF'
+          import yaml, os
+          with open('_config/dso/build/default.yml', 'r') as f:
+              data = yaml.safe_load(f)
+          with open(os.environ['GITHUB_ENV'], 'a') as env_file:
+              for key, value in data.items():
+                  env_file.write(f'{key}={value}\n')
+          EOF
+
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo "Hello, world ${{ env.VERSION }}!"
