@@ -66,6 +66,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Checkout the config repository to read shared variables
+      - name: Checkout config repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/config
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: _config
+
+      # Parse dso/dev/default.yml and export all key-value pairs as environment variables
+      - name: Load variables from dso/dev/default.yml
+        run: |
+          python3 - <<'EOF'
+          import yaml, os
+          with open('_config/dso/dev/default.yml', 'r') as f:
+              data = yaml.safe_load(f)
+          with open(os.environ['GITHUB_ENV'], 'a') as env_file:
+              for key, value in data.items():
+                  env_file.write(f'{key}={value}\n')
+          EOF
+
       - name: Mostrar version y frutas seleccionadas
         run: |
           echo "Version: ${{ env.VERSION }}"
@@ -74,6 +94,10 @@ jobs:
       - name: Deploy a DEV
         run: |
           echo "Desplegando version ${{ env.VERSION }} en DEV"
+          echo ${{ env.AWS_REGION }}
+          echo ${{ env.AWS_USER_UPLOAD }}
+          echo ${{ env.ARTIFACTORY_URL }}
+
 
     #   - name: Simular error
     #     run: exit 1
