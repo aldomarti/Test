@@ -62,3 +62,10 @@ jobs:
           echo ${{ env.AWS_REGION }}
           echo ${{ env.AWS_USER_UPLOAD }}
           echo ${{ env.ARTIFACTORY_URL }}
+
+      - name: replace and file
+        run: |
+          grep -oP '\$\{\K[^}]+' ingesta-dso-lambda-ecr-serverless.json | sort -u | while read -r var; do
+            sed -i "s|\${${var}}|${!var}|g" ingesta-dso-lambda-ecr-serverless.json
+          done
+        working-directory: ${{ github.workspace }}
