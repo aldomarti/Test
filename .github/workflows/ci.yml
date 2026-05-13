@@ -69,3 +69,6 @@ jobs:
             sed -i "s|\${${var}}|${!var}|g" ingesta-dso-lambda-ecr-serverless.json
           done
         working-directory: ${{ github.workspace }}
+      
+      - name: Display the modified JSON file
+        run: cat ingesta-dso-lambda-ecr-serverless.json
