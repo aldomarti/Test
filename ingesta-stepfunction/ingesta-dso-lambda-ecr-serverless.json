@@ -4,10 +4,10 @@
   "States": {
     "Lambda Invoke": {
       "Type": "Task",
-      "Resource": "${AWS_REGION}",
-      "Output": "${AWS_USER_UPLOAD}",
+      "Resource": "${ARN_INVOKE}",
+      "Output": "${ARN_PAYLOAD}",
       "Arguments": {
-        "FunctionName": "${ARTIFACTORY_URL}"
+        "FunctionName": "${ARN_LAMBDA}"
       },
       "Retry": [
         {
