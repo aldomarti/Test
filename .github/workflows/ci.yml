@@ -65,10 +65,10 @@ jobs:
 
       - name: replace and file
         run: |
-          grep -oP '\$\{\K[^}]+' ingesta-dso-lambda-ecr-serverless.json | sort -u | while read -r var; do
-            sed -i "s|\${${var}}|${!var}|g" ingesta-dso-lambda-ecr-serverless.json
+          grep -oP '\$\{\K[^}]+' *.json | sort -u | while read -r var; do
+            sed -i "s|\${${var}}|${!var}|g" *.json
           done
-        working-directory: ${{ github.workspace }}
+        working-directory: ${{ github.workspace }}/ingesta-stepfunction
       
       - name: Display the modified JSON file
-        run: cat ingesta-dso-lambda-ecr-serverless.json
+        run: cat ${{ github.workspace }}/ingesta-stepfunction/*.json
